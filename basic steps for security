@@ -1,0 +1,37 @@
+spring security Flow :
+
+client -                      Backend
+
+                          Authetication Manager
+send post request ----->   load the user Details
+username                    Generate JwT Token
+password
+            <-------------------------------
+
+Get/account/balance
+auth: bearer<Token> --------------(intercept the filter->doFilter validate jwt token load user
+                                     set Authentication Context-> account controller and retrieve Account balance
+                                                     (validate token) then balance
+
+
+Basic Implemetion Steps :
+
+------------------jWT Utility Class: for token generation and validation----------------------------
+
+generate the Token -> create Token ->
+
+      (set claims, set subject, set issuedAt(Date),set Expiration ,sign with (secret) key, compact()
+
+     ->return Jwt token ->validate Token-> Extract UserName ->extract claims -> check is token expired->
+
+      return validation
+
+---------------JWT Request Filter : intercept and validate the JWT Token-----------------
+
+---------------Security Configuration: configure the http Authentication and httpsecurity-------------
+
+------Auth Controller--- Handle login and generate JWT tokens-------------
+
+------secure the endpoints----------------------------
+
+
