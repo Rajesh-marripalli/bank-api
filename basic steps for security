@@ -1,8 +1,47 @@
-spring security Flow :
+                                   -:spring security Flow :-
+                  -----------------------------------------------------------
+    [Start] → [User submits login credentials]
+            ↓
+    [Authenticate User]
+            ↓
+    [Call AuthenticationManager]
+            ↓
+    [AuthenticationProvider uses UserDetailsService]
+            ↓
+    [Compare password with PasswordEncoder]
+            ↓
+    [Is authentication successful?] --No--> [Return error response]
+            ↓
+           Yes
+            ↓
+    [Generate JWT Token with JwtUtil]
+            ↓
+    [Return JWT token to user]
+            ↓
+    [User requests protected resource with JWT token]
+            ↓
+    [JwtRequestFilter extracts and validates token]
+            ↓
+    [Is token valid?] --No--> [Return error response]
+            ↓
+           Yes
+            ↓
+    [Set Authentication Context]
+            ↓
+    [Authorize request based on roles and permissions]
+            ↓
+    [Is user authorized?] --No--> [Return error response]
+            ↓
+           Yes
+            ↓
+    [Process request and return response]
+            ↓
+    [End]
+.....................................................................................................
 
 client -                      Backend
 
-                          Authetication Manager
+                          Authetication Manager-->authentication provider checkes the password
 send post request ----->   load the user Details
 username                    Generate JwT Token
 password
@@ -13,7 +52,7 @@ auth: bearer<Token> --------------(intercept the filter->doFilter validate jwt t
                                      set Authentication Context-> account controller and retrieve Account balance
                                                      (validate token) then balance
 
-
+..........................................................................................................
 Basic Implemetion Steps :
 
 ------------------jWT Utility Class: for token generation and validation----------------------------

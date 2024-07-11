@@ -7,8 +7,9 @@ import com.miniproject.bank_payment.entity.Transactions;
 import com.miniproject.bank_payment.entity.User;
 import com.miniproject.bank_payment.repository.AccountsRepository;
 import com.miniproject.bank_payment.repository.TransactionsRepository;
-import com.miniproject.bank_payment.repository.UsersRepository;
+import com.miniproject.bank_payment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +21,19 @@ import java.util.Random;
 public class AccountService {
     // AccountService.java
         @Autowired
-        private UsersRepository userRepository;
+        private UserRepository userRepository;
         @Autowired
         private AccountsRepository accountRepository;
         @Autowired
         private TransactionsRepository transactionRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
         public String createNewAccount(String username, String password, String email, Long phoneNumber) {
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
-            user.setPhoneNumber(phoneNumber);
+            user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
 
             Accounts account = new Accounts();

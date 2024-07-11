@@ -23,6 +23,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Accounts> accounts;
 
+    private String roles;
+
     // Getters and Setters
     //construtor
     //allargsconstrutor
