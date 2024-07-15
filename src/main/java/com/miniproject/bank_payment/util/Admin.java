@@ -1,4 +1,4 @@
-package com.miniproject.bank_payment.config;
+package com.miniproject.bank_payment.util;
 
 import com.miniproject.bank_payment.entity.User;
 import com.miniproject.bank_payment.repository.UserRepository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 @Component
-public class AdminInitializer {
+public class Admin {
         @Value("${app.admin.username}")
         private String adminUsername;
 

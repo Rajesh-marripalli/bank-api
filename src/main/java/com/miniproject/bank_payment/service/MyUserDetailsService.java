@@ -1,5 +1,6 @@
 package com.miniproject.bank_payment.service;
 
+import com.miniproject.bank_payment.exceptions.UserNotFoundException;
 import com.miniproject.bank_payment.security.CustomUserDetails;
 import com.miniproject.bank_payment.entity.User;
 import com.miniproject.bank_payment.repository.UserRepository;
@@ -19,7 +20,7 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UserNotFoundException("User not found");
         }
         return new CustomUserDetails(user);
     }

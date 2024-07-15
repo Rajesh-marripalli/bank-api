@@ -23,19 +23,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity // web security support
 @EnableGlobalMethodSecurity(prePostEnabled = true) //  method-level security with @PreAuthorize.
 public class SecurityConfig {
-@Autowired
-    private  MyUserDetailsService myUserDetailsService; // we created service to load user-specific data
     @Autowired
-    private JwtRequestFilter jwtRequestFilter; // we created filter to handle JWT authentication
+    private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     // Bean ,which is BCrypt in this paaword
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
-    // handles authentication
-    //When you call the authenticate method, it processes the credentials and determines if they are valid.
+    /* handles authentication
+    When you call the authenticate method, it processes the credentials and determines if they are valid.*/
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

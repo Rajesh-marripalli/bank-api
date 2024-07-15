@@ -8,36 +8,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class AuthenticationController {
 
-        @Autowired
-        private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    //it will takes the username and the password
+    @Autowired
+    private MyUserDetailsService userDetailsService;
+    // authtication authe things
 
-        @Autowired
-        private MyUserDetailsService userDetailsService;
+    @Autowired
+    private JwtUtil jwtUtil;// token generation
 
-        @Autowired
-        private JwtUtil jwtUtil;
-
-        @PostMapping("/authenticate")
-        public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) throws Exception {
-            try {
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-                );
-            } catch (Exception e) {
-                throw new Exception("Incorrect username or password", e);
-            }
-
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-            final String jwt = jwtUtil.generateToken(userDetails);
-
-            return new AuthResponse(jwt);
+    @PostMapping("/authenticate")
+    public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+                    //TODO  RefereshToken
+            );
+        } catch (Exception e) {
+            throw new Exception("Incorrect username or password", e);
         }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return new AuthResponse(jwt);
     }
+}
+
 
 

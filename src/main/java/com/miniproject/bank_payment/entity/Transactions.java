@@ -14,8 +14,11 @@ public class Transactions {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Accounts account;
+
     private String transactionType;
+
     private Double amount;
+
     private Date transactionDate;
 
 }

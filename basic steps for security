@@ -1,6 +1,6 @@
                                    -:spring security Flow :-
                   -----------------------------------------------------------
-    [Start] → [User submits login credentials]
+   → [User submits login credentials]
             ↓
     [Authenticate User]
             ↓
@@ -35,8 +35,8 @@
            Yes
             ↓
     [Process request and return response]
-            ↓
-    [End]
+
+
 .....................................................................................................
 
 client -                      Backend
@@ -50,7 +50,7 @@ password
 Get/account/balance
 auth: bearer<Token> --------------(intercept the filter->doFilter validate jwt token load user
                                      set Authentication Context-> account controller and retrieve Account balance
-                                                     (validate token) then balance
+                                                     (validate token) then balance, here continue the filter chain process
 
 ..........................................................................................................
 Basic Implemetion Steps :

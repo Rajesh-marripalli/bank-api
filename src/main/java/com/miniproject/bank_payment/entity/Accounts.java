@@ -20,13 +20,10 @@ public class Accounts {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     private String accountNumber;
 
-
     private Double balance;
-
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Transactions> transactions;
 
 

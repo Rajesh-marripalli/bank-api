@@ -19,9 +19,7 @@ public class User {
 
     private String email;
 
-    private Long phoneNumber;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Accounts> accounts;
+    private String phoneNumber;
 
     private String roles;
 
