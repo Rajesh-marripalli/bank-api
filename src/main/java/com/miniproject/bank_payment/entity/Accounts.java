@@ -2,6 +2,7 @@ package com.miniproject.bank_payment.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.mapping.ToOne;
 
 
 import java.util.Set;
@@ -15,13 +16,11 @@ public class Accounts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
+    @Column(unique = true, nullable = false)
     private String accountNumber;
-
     private Double balance;
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Transactions> transactions;

@@ -7,14 +7,17 @@ import com.miniproject.bank_payment.dto.response.TransactionDetail;
 import com.miniproject.bank_payment.entity.Accounts;
 import com.miniproject.bank_payment.entity.Transactions;
 import com.miniproject.bank_payment.entity.User;
+import com.miniproject.bank_payment.exceptions.FieldCannotNullException;
 import com.miniproject.bank_payment.exceptions.ResourceNotFound;
 import com.miniproject.bank_payment.repository.AccountsRepository;
 import com.miniproject.bank_payment.repository.TransactionsRepository;
 import com.miniproject.bank_payment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +35,17 @@ public class AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+@Transactional
+public AccountCreationResponse createNewAccount(String username, String password, String email, String roles, String phoneNumber) {
+    // Validate input fields
+    validateInputFields(username, password, email, roles, phoneNumber);
+    if (userRepository.existsByEmail(email)) {
+        throw new ResourceNotFound("Email address is already registered");
+    }
+    if (userRepository.existsByPhoneNumber(phoneNumber)) {
+        throw new ResourceNotFound("Phone number is already registered");
 
-    public AccountCreationResponse createNewAccount(String username, String password, String email,String roles, String phoneNumber) {
+    }
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -47,18 +59,42 @@ public class AccountService {
         account.setAccountNumber(generateAccountNumber());
         account.setBalance(0.0);
         accountRepository.save(account);
-        return new AccountCreationResponse(AppConstant.ACCOUNT_CREATION_SUCCESS + account.getAccountNumber(), account.getAccountNumber());
+
+        // Return success response
+        return new AccountCreationResponse(AppConstant.ACCOUNT_CREATION_SUCCESS, account.getAccountNumber());
+
+}
+
+    private void validateInputFields(String username, String password, String email, String roles, String phoneNumber) {
+        if (username == null || username.isEmpty()) {
+            throw new FieldCannotNullException("Username cannot be null or empty");
+        }
+        if (password == null || password.isEmpty()) {
+            throw new FieldCannotNullException("Password cannot be null or empty");
+        }
+        if (email == null || email.isEmpty()) {
+            throw new FieldCannotNullException("Email cannot be null or empty");
+        }
+        if (roles == null || roles.isEmpty()) {
+            throw new FieldCannotNullException("Roles cannot be null or empty");
+        }
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            throw new FieldCannotNullException("Phone number cannot be null or empty");
+        }
     }
     public Double retrieveAccountBalance(Long accountId) {
         Optional<Accounts> account = accountRepository.findById(accountId);
         if (account.isPresent()) {
             return account.get().getBalance();
         } else {
-            throw new ResourceNotFound("Account not found with ID " + accountId);
+            throw new ResourceNotFound("Account id is not found " + accountId);
         }
     }
 
     public String depositFunds(Long accountId, Double amount) {
+        if (amount == null || amount <= 0) {
+            return AppConstant.INVALID_TRANSFER_AMOUNT;
+        }
         Optional<Accounts> accountOpt = accountRepository.findById(accountId);
         if (accountOpt.isPresent()) {
             Accounts account = accountOpt.get();
@@ -79,6 +115,9 @@ public class AccountService {
     }
 
     public String withdrawFunds(Long accountId, Double amount) {
+        if (amount == null || amount <= 0) {
+            return AppConstant.INVALID_AMOUNT;
+        }
         Optional<Accounts> accountOpt = accountRepository.findById(accountId);
         if (accountOpt.isPresent()) {
             Accounts account = accountOpt.get();
@@ -108,6 +147,11 @@ public class AccountService {
         }
         Optional<Accounts> sourceAccountOpt = accountRepository.findById(sourceAccountId);
         Optional<Accounts> destinationAccountOpt = accountRepository.findById(destinationAccountId);
+         if (sourceAccountOpt.isEmpty()) {
+            return AppConstant.INVALID_SOURCE_ACCOUNT;
+        } else if (destinationAccountOpt.isEmpty()) {
+            return AppConstant.INVALID_DESTINATION_ACCOUNT;
+        }
         if (sourceAccountOpt.isPresent() && destinationAccountOpt.isPresent()) {
 
             Accounts sourceAccount = sourceAccountOpt.get();

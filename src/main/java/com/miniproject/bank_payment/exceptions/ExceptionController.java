@@ -1,31 +1,31 @@
 package com.miniproject.bank_payment.exceptions;
 
-import com.miniproject.bank_payment.model.ApiError;
+import com.miniproject.bank_payment.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @ControllerAdvice
 public class ExceptionController {
     @ExceptionHandler(value = UserNotFoundException.class)
-    public ResponseEntity<ApiError> nouserfound()
+    public ResponseEntity<ErrorResponse> nouserfound()
     {
-        ApiError error = new ApiError("no userfound",new Date());
-        return new ResponseEntity<ApiError>(error,HttpStatus.BAD_REQUEST);
+        ErrorResponse error = new ErrorResponse("no userfound");
+        return new ResponseEntity<ErrorResponse>(error,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFound.class)
-    public ResponseEntity<ApiError> resourceNotFoundException() {
-        ApiError errorDetails = new ApiError("resourcenotfound", new Date());
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> resourceNotFoundException(ResourceNotFound ex) {
+        String errorMessage = ex.getMessage();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
     }
+    @ExceptionHandler(FieldCannotNullException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleEmailCannotNullException(FieldCannotNullException ex) {
+        String errorMessage = ex.getMessage();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+    }
+
 }

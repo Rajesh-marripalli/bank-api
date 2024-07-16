@@ -11,14 +11,19 @@ public class Transactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
     private Accounts account;
 
+    @Column(nullable = false)
     private String transactionType;
 
+    @Column(nullable = false)
     private Double amount;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private Date transactionDate;
 
 }
