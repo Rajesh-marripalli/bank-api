@@ -1,6 +1,6 @@
 package com.miniproject.bank_payment.security;
 
-import com.miniproject.bank_payment.entity.User;
+import com.miniproject.bank_payment.entity.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
         private String password;
         private List<GrantedAuthority> authorities;
 
-        public CustomUserDetails(User user) {
+        public CustomUserDetails(Admin user) {
             this.username = user.getUsername();
             this.password = user.getPassword();
             this.authorities = Arrays.stream(user.getRoles().split(","))

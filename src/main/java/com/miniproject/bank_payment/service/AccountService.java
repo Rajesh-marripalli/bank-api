@@ -62,7 +62,6 @@ public AccountCreationResponse createNewAccount(String username, String password
 
         // Return success response
         return new AccountCreationResponse(AppConstant.ACCOUNT_CREATION_SUCCESS, account.getAccountNumber());
-
 }
 
     private void validateInputFields(String username, String password, String email, String roles, String phoneNumber) {

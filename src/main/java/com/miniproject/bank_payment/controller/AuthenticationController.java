@@ -18,10 +18,10 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-    //it will takes the username and the password
+
     @Autowired
     private MyUserDetailsService userDetailsService;
-    // authtication authe things
+
 
     @Autowired
     private JwtUtil jwtUtil;// token generation

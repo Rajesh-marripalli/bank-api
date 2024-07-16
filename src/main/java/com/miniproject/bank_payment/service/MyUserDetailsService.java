@@ -1,6 +1,8 @@
 package com.miniproject.bank_payment.service;
 
+import com.miniproject.bank_payment.entity.Admin;
 import com.miniproject.bank_payment.exceptions.UserNotFoundException;
+import com.miniproject.bank_payment.repository.AdminRepo;
 import com.miniproject.bank_payment.security.CustomUserDetails;
 import com.miniproject.bank_payment.entity.User;
 import com.miniproject.bank_payment.repository.UserRepository;
@@ -14,14 +16,14 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AdminRepo adminRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
+        Admin admin = adminRepo.findByUsername(username);
+        if (admin == null) {
             throw new UserNotFoundException("User not found");
         }
-        return new CustomUserDetails(user);
+        return new CustomUserDetails(admin);
     }
 }
